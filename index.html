@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="card">
+    
+  <div class="search">
+    <input type="text" id="search-input" placeholder="Enter Your City" spellcheck="false">
+    <button id="search-btn">
+      <img src="https://cdn-icons-png.flaticon.com/512/751/751463.png" alt="search icon">
+    </button>
+  </div>
+
+  <div class="header">
+    <div class="weather-type" id="weather-type">☁️ Cloudy</div>
+  </div>
+
+  <div class="weather">
+    <img id="weather-icon" src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Weather Icon">
+    <h1 class="temperature" id="temperature">20°C</h1>
+    <h2 class="city" id="city-name">Dehradun</h2>
+  </div>
+
+  <div class="middle-info">
+    <div class="info">
+      <p>💧 Humidity</p>
+      <h4 id="humidity">55%</h4>
+    </div>
+    <div class="info">
+      <p>🌬 Wind Speed</p>
+      <h4 id="wind-speed">11 m/s</h4>
+    </div>
+  </div>
+
+</div>
+<script>
+  const apikey = "086b4f26e6e3722128520c7420711962";
+  const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+  async function checkWeather(city) {
+    const response = await fetch(`${apiurl}${city}&appid=${apikey}`);
+    const data = await response.json();
+
+    console.log(data);
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temperature").innerHTML = Math.round(data.main.temp) + "°C";
+    document.querySelector(".weather-type").innerHTML = data.weather[0].main;
+    document.querySelector(".middle-info .info:nth-child(1) h4").innerHTML = data.main.humidity + "%";
+    document.querySelector(".middle-info .info:nth-child(2) h4").innerHTML = data.wind.speed + " m/s";
+    const iconCode = data.weather[0].icon;
+   document.getElementById("weather-icon").src =
+   `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+  }
+  const input = document.getElementById("search-input");
+  const btn = document.getElementById("search-btn");
+
+  btn.addEventListener("click", () => {
+    checkWeather(input.value);
+  });
+
+  input.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      checkWeather(input.value);
+    }
+  });
+  checkWeather("pune");
+</script>
+</body>
+</html>
